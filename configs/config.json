@@ -1,0 +1,10 @@
+{
+	"database": {
+		"host": "localhost",
+		"username": "root",
+		"password": ""
+	},
+	"databaseMongoDB": {
+		"mongoaddr": "mongodb://localhost:3306/dbServer"
+	}
+}

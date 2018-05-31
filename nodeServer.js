@@ -1,14 +1,19 @@
 var createError = require('http-errors');
 var express = require('express');
+var mysql = require('mysql');
+var mongo = require('mongodb');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser  = require("body-parser");
+var env       = process.env.NODE_ENV || 'database';
+var config    = require(__dirname + '/configs/config.json')[env];
 
 
 var app = express();
 var server = require('http').Server(app);
 var port = normalizePort(process.env.PORT || '3001');
+var routerServer = require('./routerServer.js');
 
 function NODESERVER(){
     var self = this;
@@ -18,10 +23,30 @@ function NODESERVER(){
 NODESERVER.prototype.createServer = function() {
     var self = this;
 	self.connectMysql();
+	self.configExpress();
 }
 NODESERVER.prototype.connectMysql = function() {
     var self = this;
+	var con = mysql.createConnection({
+		host: config.host,
+		user: config.username,
+		password: config.password
+	});
+	con.connect(function(err){
+		if(err) throw err;
+		console.log("Connected to MySQL Database!");
+	});
 }
+/*NODESERVER.prototype.connectMongoDB = function() {
+  var self = this;
+  var MongoClient = require('mongodb').MongoClient;
+  var url = config.mongoaddr;
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    console.log("Database created!");
+    db.close();
+  });
+}*/
 NODESERVER.prototype.configExpress = function() {
     var self = this;
 	app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,6 +54,7 @@ NODESERVER.prototype.configExpress = function() {
     var router = express.Router();
     //app.use(allowCrossDomain);
     app.use('/api', router);
+	var router_Server = new routerServer(router);
 }
 NODESERVER.prototype.startServer = function() {
     var self = this;
