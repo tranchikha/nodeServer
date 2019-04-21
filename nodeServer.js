@@ -8,6 +8,14 @@ var logger = require('morgan');
 var bodyParser  = require("body-parser");
 var env       = process.env.NODE_ENV || 'database';
 var config    = require(__dirname + '/configs/config.json')[env];
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://khatran-startcodingfb.firebaseio.com"
+});
 
 
 var app = express();
@@ -21,7 +29,7 @@ function NODESERVER(){
 	self.startServer();
 };
 NODESERVER.prototype.createServer = function() {
-    var self = this;
+  var self = this;
 	self.connectMysql();
 	self.configExpress();
 }

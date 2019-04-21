@@ -1,8 +1,8 @@
 var express = require('express');
 /*define controller list*/
-var temperature = require('./controller/temperatureController');
+var station = require('./controller/stationController');
 /*define router list*/
-var routerTemperature = express.Router();
+var routerStation = express.Router();
 /*Create object router*/
 function routerServer(router) {
 	var self = this;
@@ -11,11 +11,11 @@ function routerServer(router) {
 
 routerServer.prototype.handleRouters = function(router){
 	var self = this;
-	router.use('/temperature', routerTemperature); self.temperatureController(routerTemperature);
+	router.use('/station', routerStation); self.stationController(routerStation);
 }
 
-routerServer.prototype.temperatureController = function(router){
-	var temperatureController = new temperature(router);
+routerServer.prototype.stationController = function(router){
+	var stationController = new station(router);
 }
 
 module.exports = routerServer;
